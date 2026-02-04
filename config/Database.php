@@ -1,25 +1,16 @@
 <?php
-/**
- * Classe Database - Pattern Singleton pour la connexion PDO
- */
+
 class Database
 {
-    // Instance unique de la classe
     private static ?Database $instance = null;
-    
-    // Connexion PDO
     private PDO $connection;
     
-    // Configuration de la base de données
     private const DB_HOST = 'localhost';
     private const DB_NAME = 'todo_app';
     private const DB_USER = 'root';
     private const DB_PASS = '';
     private const DB_CHARSET = 'utf8mb4';
     
-    /**
-     * Constructeur privé - empêche l'instanciation directe
-     */
     private function __construct()
     {
         try {
@@ -43,22 +34,13 @@ class Database
         }
     }
     
-    /**
-     * Empêche le clonage de l'instance
-     */
     private function __clone() {}
     
-    /**
-     * Empêche la désérialisation de l'instance
-     */
     public function __wakeup()
     {
         throw new Exception("Un singleton ne peut pas être désérialisé.");
     }
     
-    /**
-     * Récupère l'instance unique de Database (Singleton)
-     */
     public static function getInstance(): Database
     {
         if (self::$instance === null) {
@@ -68,9 +50,6 @@ class Database
         return self::$instance;
     }
     
-    /**
-     * Récupère la connexion PDO
-     */
     public function getConnection(): PDO
     {
         return $this->connection;

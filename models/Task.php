@@ -1,12 +1,8 @@
 <?php
-/**
- * Model Task - Gère les opérations SQL pour les tâches
- */
+
 class Task
 {
     private PDO $db;
-    
-    // Propriétés de la tâche
     private ?int $id = null;
     private string $title = '';
     private string $description = '';
@@ -18,8 +14,6 @@ class Task
     {
         $this->db = Database::getInstance()->getConnection();
     }
-    
-    // ==================== GETTERS ====================
     
     public function getId(): ?int
     {
@@ -51,8 +45,6 @@ class Task
         return $this->updated_at;
     }
     
-    // ==================== SETTERS ====================
-    
     public function setTitle(string $title): self
     {
         $this->title = $title;
@@ -71,11 +63,6 @@ class Task
         return $this;
     }
     
-    // ==================== MÉTHODES CRUD ====================
-    
-    /**
-     * Récupère toutes les tâches
-     */
     public function findAll(): array
     {
         $sql = "SELECT * FROM tasks ORDER BY created_at DESC";
@@ -84,9 +71,6 @@ class Task
         return $stmt->fetchAll();
     }
     
-    /**
-     * Récupère une tâche par son ID
-     */
     public function findById(int $id): ?array
     {
         $sql = "SELECT * FROM tasks WHERE id = :id";
@@ -97,9 +81,6 @@ class Task
         return $result ?: null;
     }
     
-    /**
-     * Crée une nouvelle tâche
-     */
     public function create(): bool
     {
         $sql = "INSERT INTO tasks (title, description, is_completed, created_at, updated_at) 
@@ -114,9 +95,6 @@ class Task
         ]);
     }
     
-    /**
-     * Met à jour une tâche existante
-     */
     public function update(int $id): bool
     {
         $sql = "UPDATE tasks 
@@ -136,9 +114,6 @@ class Task
         ]);
     }
     
-    /**
-     * Bascule le statut d'une tâche (fait/non fait)
-     */
     public function toggleStatus(int $id): bool
     {
         $sql = "UPDATE tasks 
@@ -151,9 +126,6 @@ class Task
         return $stmt->execute(['id' => $id]);
     }
     
-    /**
-     * Supprime une tâche
-     */
     public function delete(int $id): bool
     {
         $sql = "DELETE FROM tasks WHERE id = :id";
@@ -162,9 +134,6 @@ class Task
         return $stmt->execute(['id' => $id]);
     }
     
-    /**
-     * Hydrate le modèle avec des données
-     */
     public function hydrate(array $data): self
     {
         if (isset($data['id'])) {

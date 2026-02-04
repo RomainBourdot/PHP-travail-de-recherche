@@ -1,7 +1,5 @@
 <?php
-/**
- * Controller Task - Gère la logique métier des tâches
- */
+
 class TaskController
 {
     private Task $taskModel;
@@ -11,25 +9,16 @@ class TaskController
         $this->taskModel = new Task();
     }
     
-    /**
-     * Affiche la liste des tâches
-     */
     public function index(): void
     {
-        // Récupération des tâches via le Model
         $tasks = $this->taskModel->findAll();
         
-        // Message flash
         $message = $_SESSION['flash_message'] ?? null;
         unset($_SESSION['flash_message']);
         
-        // Chargement de la vue
         require_once __DIR__ . '/../views/tasks/index.php';
     }
     
-    /**
-     * Affiche le formulaire de création
-     */
     public function create(): void
     {
         $errors = $_SESSION['errors'] ?? [];
@@ -39,22 +28,16 @@ class TaskController
         require_once __DIR__ . '/../views/tasks/create.php';
     }
     
-    /**
-     * Enregistre une nouvelle tâche
-     */
     public function store(): void
     {
-        // Vérification de la méthode HTTP
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('?action=index');
             return;
         }
         
-        // Récupération et nettoyage des données
         $title = trim($_POST['title'] ?? '');
         $description = trim($_POST['description'] ?? '');
         
-        // Validation
         $errors = [];
         
         if (empty($title)) {
@@ -67,7 +50,6 @@ class TaskController
             $errors['description'] = 'La description ne doit pas dépasser 1000 caractères.';
         }
         
-        // S'il y a des erreurs, retour au formulaire
         if (!empty($errors)) {
             $_SESSION['errors'] = $errors;
             $_SESSION['old'] = ['title' => $title, 'description' => $description];
@@ -75,7 +57,6 @@ class TaskController
             return;
         }
         
-        // Création de la tâche via le Model
         $this->taskModel
             ->setTitle($title)
             ->setDescription($description)
@@ -96,9 +77,6 @@ class TaskController
         $this->redirect('?action=index');
     }
     
-    /**
-     * Affiche le formulaire de modification
-     */
     public function edit(?int $id): void
     {
         if (!$id) {
@@ -124,9 +102,6 @@ class TaskController
         require_once __DIR__ . '/../views/tasks/edit.php';
     }
     
-    /**
-     * Met à jour une tâche existante
-     */
     public function update(): void
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -139,7 +114,6 @@ class TaskController
         $description = trim($_POST['description'] ?? '');
         $isCompleted = isset($_POST['is_completed']);
         
-        // Validation
         $errors = [];
         
         if (empty($title)) {
@@ -159,7 +133,6 @@ class TaskController
             return;
         }
         
-        // Mise à jour via le Model
         $this->taskModel
             ->setTitle($title)
             ->setDescription($description)
@@ -180,9 +153,6 @@ class TaskController
         $this->redirect('?action=index');
     }
     
-    /**
-     * Bascule le statut d'une tâche
-     */
     public function toggle(?int $id): void
     {
         if (!$id) {
@@ -205,9 +175,6 @@ class TaskController
         $this->redirect('?action=index');
     }
     
-    /**
-     * Supprime une tâche
-     */
     public function delete(?int $id): void
     {
         if (!$id) {
@@ -230,9 +197,6 @@ class TaskController
         $this->redirect('?action=index');
     }
     
-    /**
-     * Redirige vers une URL
-     */
     private function redirect(string $url): void
     {
         header("Location: {$url}");

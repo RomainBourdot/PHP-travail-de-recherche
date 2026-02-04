@@ -1,12 +1,7 @@
 <?php
-/**
- * Front Controller - Point d'entrée unique de l'application
- */
 
-// Démarrage de la session
 session_start();
 
-// Autoload simple
 spl_autoload_register(function ($class) {
     $paths = [
         'config/',
@@ -23,13 +18,10 @@ spl_autoload_register(function ($class) {
     }
 });
 
-// Système de routage simple
 $action = $_GET['action'] ?? 'index';
 
-// Instanciation du contrôleur
 $controller = new TaskController();
 
-// Routage des actions
 switch ($action) {
     case 'index':
         $controller->index();
@@ -63,7 +55,6 @@ switch ($action) {
         break;
     
     default:
-        // Page 404
         http_response_code(404);
         echo "<h1>404 - Page non trouvée</h1>";
         break;
