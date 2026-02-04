@@ -1,0 +1,20 @@
+# Activation du module de réécriture
+RewriteEngine On
+
+# Redirection de toutes les requêtes vers index.php (sauf fichiers existants)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+# Protection des dossiers sensibles
+RewriteRule ^(config|models|controllers)/ - [F,L]
+
+# Désactivation de l'affichage du contenu des répertoires
+Options -Indexes
+
+# Protection contre certaines attaques
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
